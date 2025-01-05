@@ -8,7 +8,7 @@ class AppState {
 class Counter extends Component {
     final int count;
     final void Function() inc;
-    Counter({required this.count, required this.inc}) : super(null);
+    Counter({required this.count, required this.inc});
 
     @override
     Element render() {
@@ -18,7 +18,7 @@ class Counter extends Component {
     }
 }
 
-class App extends Component<AppState> {
+class App extends StatefulComponent<AppState> {
     App() : super(AppState());
 
     @override
