@@ -1,0 +1,63 @@
+name: Build Dart Examples and Publish to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Dart
+      uses: dart-lang/setup-dart@v1
+      with:
+        channel: stable
+
+    - name: Install dependencies
+      run: dart pub get
+
+    - name: Build examples
+      run: |
+        for dir in examples/*; do
+          if [ -d "$dir" ]; then
+            example=$(basename "$dir")
+            dart compile js --no-source-maps -m "./examples/$example/$example.dart" -o "./examples/$example/$example.js" -O4
+          fi
+        done
+
+    - name: Set up Git
+      run: |
+        git config --global user.name "github-actions"
+        git config --global user.email "github-actions@github.com"
+
+    - name: Deploy to GitHub Pages
+      run: |
+        # Create a temporary folder to host the compiled examples
+        mkdir -p gh-pages
+
+        # Copy the entire examples directory into the gh-pages folder
+        cp -r examples/* gh-pages/
+
+        # Navigate to the gh-pages folder
+        cd gh-pages
+
+        # Initialize a new git repository, commit, and push to the gh-pages branch
+        git init
+        git add .
+        git commit -m "Deploy compiled examples"
+        git branch -M master 
+
+        # Push directly to the gh-pages branch, no need to add a remote
+        git push -f origin master:gh-pages
+
+    - name: Clean up
+      run: |
+        rm -rf gh-pages
