@@ -13,8 +13,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+    - name: Checkout 
+      uses: actions/checkout@v4
 
     - name: Set up Dart
       uses: dart-lang/setup-dart@v1
@@ -33,26 +33,12 @@ jobs:
           fi
         done
 
-    - name: Set up Git
-      run: |
-        git config --global user.name "github-actions"
-        git config --global user.email "github-actions@github.com"
-
+    - name: Setup Pages
+      uses: actions/configure-pages@v5
+    - name: Upload artifact
+      uses: actions/upload-pages-artifact@v3
+      with:
+        path: './examples'
     - name: Deploy to GitHub Pages
-      run: |
-        mkdir -p gh-pages
-
-        cp -r examples/* gh-pages/
-
-        cd gh-pages
-
-        git init
-        git add .
-        git commit -m "Deploy compiled examples"
-        git branch -M master
-        git remote add origin https://github.com/${{ github.repository }}.git
-        git push -f origin master:gh-pages
-
-    - name: Clean up
-      run: |
-        rm -rf gh-pages
+      id: deployment
+      uses: actions/deploy-pages@v4
