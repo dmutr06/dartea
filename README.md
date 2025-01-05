@@ -17,7 +17,7 @@ To use this library in your Dart project, follow these steps:
 
 Some examples are provided in the examples folder
 
-### Compilation an example
+### Compiling examples 
 
 ```bash
 dart compile js --no-source-maps -m ./examples/<example>/<example>.dart -o ./examples/<example>/<example>.js -O4
