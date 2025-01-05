@@ -40,22 +40,17 @@ jobs:
 
     - name: Deploy to GitHub Pages
       run: |
-        # Create a temporary folder to host the compiled examples
         mkdir -p gh-pages
 
-        # Copy the entire examples directory into the gh-pages folder
         cp -r examples/* gh-pages/
 
-        # Navigate to the gh-pages folder
         cd gh-pages
 
-        # Initialize a new git repository, commit, and push to the gh-pages branch
         git init
         git add .
         git commit -m "Deploy compiled examples"
-        git branch -M master 
-
-        # Push directly to the gh-pages branch, no need to add a remote
+        git branch -M master
+        git remote add origin https://github.com/${{ github.repository }}.git
         git push -f origin master:gh-pages
 
     - name: Clean up
